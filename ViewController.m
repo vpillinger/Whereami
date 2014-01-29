@@ -21,7 +21,7 @@
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    [locationManager startUpdatingLocation];
+    [worldView setShowsUserLocation:YES];
 }
 
 - (void)viewDidUnload
@@ -48,5 +48,14 @@
 {
     NSLog(@"Could not find the location %@",[error localizedDescription]);
 }
-
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+    CLLocationCoordinate2D loc = [userLocation coordinate];
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(loc, 5000, 5000);
+    [worldView setRegion:region animated:YES];
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [self findLocation];
+    [textField resignFirstResponder];
+    return YES;
+}
 @end
